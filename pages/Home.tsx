@@ -9,8 +9,14 @@ import confetti from 'canvas-confetti';
 
 export const Home: React.FC = () => {
   const { categories, products, settings, addToCart } = useStore();
-  const [activeCategory, setActiveCategory] = useState(categories[0]?.id);
+  const [activeCategory, setActiveCategory] = useState<string | undefined>(categories[0]?.id);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  useEffect(() => {
+    if (categories.length > 0 && !activeCategory) {
+      setActiveCategory(categories[0].id);
+    }
+  }, [categories, activeCategory]);
 
   const filteredProducts = products.filter(p =>
     p.isActive &&

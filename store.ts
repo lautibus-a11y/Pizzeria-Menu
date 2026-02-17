@@ -73,7 +73,7 @@ export const useStore = create<AppState>()(
         set({ isLoading: true });
         try {
           const [catRes, prodRes, setRes, ordRes] = await Promise.all([
-            supabase.from('categories').select('*').order('name'),
+            supabase.from('categories').select('*').order('id'),
             supabase.from('products').select('*').order('name'),
             supabase.from('settings').select('*').single(),
             supabase.from('orders').select('*').order('created_at', { ascending: false })
