@@ -73,31 +73,37 @@ export const Cart: React.FC = () => {
   }
 
   return (
-    <Layout showBack onBack={() => window.location.hash = '#'}>
-      <div className="min-h-screen pt-24 pb-32 px-4 md:px-12 bg-tablecloth">
+    <Layout showBack onBack={() => window.location.hash = '#'} hideFooter>
+      <div className="flex-1 flex items-center justify-center p-4 md:p-8 relative min-h-[calc(100vh-100px)]">
+        {/* Background Decorative Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#e31c1c]/5 rounded-full blur-[100px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#fac415]/5 rounded-full blur-[120px]" />
+        </div>
+
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col lg:flex-row gap-8 lg:gap-20 max-w-7xl mx-auto"
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="relative bg-[#0c0a0a] rounded-[3rem] md:rounded-[4rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col lg:flex-row max-w-6xl w-full lg:h-[80vh] z-10"
         >
-          {/* Listado de Productos */}
-          <div className="flex-1 space-y-8">
-            <div className="flex items-end justify-between border-b border-white/10 pb-6 md:pb-10">
-              <div className="space-y-1 md:space-y-2">
-                <span className="text-[#e31c1c] font-black text-[9px] md:text-[10px] uppercase tracking-[0.5em]">Tu Selección</span>
-                <h3 className="font-header text-4xl md:text-7xl text-white uppercase tracking-tighter leading-none">Mi Carrito</h3>
+          {/* Listado de Productos (Izquierda) */}
+          <div className="flex-1 flex flex-col h-full overflow-hidden border-b lg:border-b-0 lg:border-r border-white/10">
+            <div className="p-8 md:p-12 pb-4 flex items-end justify-between shrink-0">
+              <div className="space-y-1">
+                <span className="text-[#e31c1c] font-black text-[9px] uppercase tracking-[0.5em]">Tu Selección</span>
+                <h3 className="font-header text-4xl md:text-6xl text-white uppercase tracking-tighter leading-none">Mi Carrito</h3>
               </div>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={clearCart}
-                className="text-[8px] md:text-[10px] text-white/40 font-black uppercase tracking-[0.3em] px-4 md:px-8 py-3 md:py-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:text-[#e31c1c]"
+                className="text-[9px] text-white/40 font-black uppercase tracking-[0.3em] px-6 py-3 rounded-xl bg-white/5 border border-white/10 transition-all hover:text-[#e31c1c]"
               >
-                Vaciar Todo
+                Vaciar
               </motion.button>
             </div>
 
-            <div className="space-y-4">
+            <div className="flex-1 overflow-y-auto no-scrollbar p-8 md:p-12 pt-4 space-y-4">
               <AnimatePresence mode="popLayout">
                 {cart.map((item, idx) => {
                   const extrasIds = item.selectedExtras.map(e => e.id);
@@ -108,35 +114,35 @@ export const Cart: React.FC = () => {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
                       layout
-                      className="bg-white/5 p-4 md:p-8 rounded-[2.5rem] md:rounded-[3rem] flex items-center gap-4 md:gap-12 border border-white/5 hover:border-white/20 transition-all group relative overflow-hidden"
+                      className="bg-white/5 p-4 md:p-6 rounded-[2.5rem] flex items-center gap-6 border border-white/5 hover:border-white/20 transition-all group"
                     >
-                      <div className="relative overflow-hidden rounded-2xl md:rounded-[2rem] shadow-2xl shrink-0 w-20 h-20 md:w-36 md:h-36">
+                      <div className="relative overflow-hidden rounded-[1.5rem] shadow-xl shrink-0 w-20 h-20 md:w-28 md:h-28">
                         <img src={item.imageUrl} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
                       </div>
-                      <div className="flex-1 min-w-0 flex flex-col justify-center">
-                        <div className="flex justify-between items-start mb-1 md:mb-2">
-                          <h4 className="font-header text-xl md:text-3xl text-white uppercase tracking-tighter truncate pr-4">{item.name}</h4>
-                          <span className="font-header text-[#fac415] text-lg md:text-3xl">{settings.currency}{item.price.toLocaleString()}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start mb-1">
+                          <h4 className="font-header text-xl md:text-2xl text-white uppercase tracking-tighter truncate pr-4">{item.name}</h4>
+                          <span className="font-header text-[#fac415] text-xl">{settings.currency}{item.price.toLocaleString()}</span>
                         </div>
-                        <div className="flex flex-wrap gap-1 mb-3 md:mb-6">
+                        <div className="flex flex-wrap gap-1 mb-4">
                           {item.selectedExtras.map(extra => (
-                            <span key={extra.id} className="text-[7px] md:text-[8px] text-white/40 bg-white/5 px-2 py-1 rounded-full font-black uppercase tracking-widest border border-white/5">
+                            <span key={extra.id} className="text-[7px] text-white/40 bg-white/5 px-2 py-0.5 rounded-full font-black uppercase tracking-widest border border-white/5">
                               + {extra.name}
                             </span>
                           ))}
                         </div>
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4 md:gap-6 bg-black/40 rounded-xl md:rounded-2xl p-1.5 md:p-2 border border-white/5">
-                            <motion.button whileTap={{ scale: 0.8 }} onClick={() => updateQuantity(item.id, extrasIds, -1)} className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-lg md:rounded-xl bg-white/5 text-white hover:bg-[#e31c1c] transition-all"><Minus size={14} /></motion.button>
-                            <span className="font-header text-xl md:text-2xl w-6 md:w-8 text-center">{item.quantity}</span>
-                            <motion.button whileTap={{ scale: 0.8 }} onClick={() => updateQuantity(item.id, extrasIds, 1)} className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-lg md:rounded-xl bg-white/5 text-white hover:bg-[#e31c1c] transition-all"><Plus size={14} /></motion.button>
+                          <div className="flex items-center gap-4 bg-black/40 rounded-xl p-1 border border-white/5">
+                            <motion.button whileTap={{ scale: 0.8 }} onClick={() => updateQuantity(item.id, extrasIds, -1)} className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 text-white hover:bg-[#e31c1c] transition-all"><Minus size={12} /></motion.button>
+                            <span className="font-header text-lg w-6 text-center">{item.quantity}</span>
+                            <motion.button whileTap={{ scale: 0.8 }} onClick={() => updateQuantity(item.id, extrasIds, 1)} className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 text-white hover:bg-[#e31c1c] transition-all"><Plus size={12} /></motion.button>
                           </div>
                           <motion.button
                             whileHover={{ scale: 1.1, color: '#e31c1c' }}
                             onClick={() => removeFromCart(item.id, extrasIds)}
-                            className="text-white/20 p-2 transition-colors hover:text-[#e31c1c]"
+                            className="text-white/20 transition-colors hover:text-[#e31c1c]"
                           >
-                            <Trash2 size={20} />
+                            <Trash2 size={18} />
                           </motion.button>
                         </div>
                       </div>
@@ -147,18 +153,18 @@ export const Cart: React.FC = () => {
             </div>
           </div>
 
-          {/* Checkout Panel */}
-          <div className="lg:w-[450px]">
-            <div className="sticky top-32 space-y-6">
-              <div className="bg-white/5 p-6 md:p-12 rounded-[3rem] md:rounded-[4rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.5)] space-y-8 md:space-y-10">
-                <div className="flex items-center gap-4 border-b border-white/5 pb-6">
-                  <div className="w-10 h-10 bg-[#e31c1c] rounded-xl flex items-center justify-center text-white shadow-[0_0_20px_rgba(227,28,28,0.4)]">
-                    <ShoppingBag size={20} />
-                  </div>
-                  <h3 className="font-header text-3xl md:text-4xl text-white uppercase tracking-tighter pt-1">Finalizar</h3>
+          {/* Checkout Panel (Derecha) */}
+          <div className="lg:w-[450px] bg-white/[0.02] flex flex-col h-full overflow-hidden">
+            <div className="p-8 md:p-12 flex flex-col h-full">
+              <div className="flex items-center gap-4 border-b border-white/5 pb-8 mb-8 shrink-0">
+                <div className="w-12 h-12 bg-[#e31c1c] rounded-2xl flex items-center justify-center text-white shadow-[0_0_20px_rgba(227,28,28,0.4)]">
+                  <ShoppingBag size={24} />
                 </div>
+                <h3 className="font-header text-4xl text-white uppercase tracking-tighter pt-1">Finalizar</h3>
+              </div>
 
-                <div className="space-y-4 md:space-y-6">
+              <div className="flex-1 overflow-y-auto no-scrollbar space-y-6 pr-1">
+                <div className="space-y-4">
                   {[
                     { id: 'name', icon: User, placeholder: 'Tu nombre...', value: customer.name },
                     { id: 'address', icon: MapPin, placeholder: 'Dirección (Calle y Altura)...', value: customer.address },
@@ -171,7 +177,7 @@ export const Cart: React.FC = () => {
                       <input
                         type="text"
                         placeholder={field.placeholder}
-                        className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-14 pr-6 text-xs md:text-sm text-white placeholder:text-white/20 outline-none focus:bg-white/10 focus:border-[#e31c1c]/50 transition-all font-medium shadow-inner"
+                        className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-14 pr-6 text-xs text-white placeholder:text-white/20 outline-none focus:bg-white/10 focus:border-[#e31c1c]/50 transition-all font-medium"
                         value={field.value}
                         onChange={(e) => setCustomer({ ...customer, [field.id]: e.target.value })}
                       />
@@ -197,29 +203,29 @@ export const Cart: React.FC = () => {
                     ))}
                   </div>
                 </div>
+              </div>
 
-                <div className="pt-8 border-t border-white/10 space-y-6">
-                  <div className="flex justify-between items-center px-2">
-                    <span className="text-white/30 font-black text-[9px] uppercase tracking-[0.4em]">Subtotal</span>
-                    <span className="text-4xl md:text-6xl font-header text-white tracking-tighter">
-                      <span className="text-[#fac415] text-2xl md:text-4xl mr-1">{settings.currency}</span>
-                      {total.toLocaleString()}
-                    </span>
-                  </div>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleSendOrder}
-                    className="w-full bg-[#10a37f] text-white rounded-[2rem] py-6 md:py-8 font-black text-[10px] md:text-[11px] transition-all flex items-center justify-center gap-4 md:gap-6 shadow-[0_20px_40px_rgba(16,163,127,0.3)] uppercase tracking-[0.4em]"
-                  >
-                    <MessageCircle size={20} /> Hacer Pedido
-                  </motion.button>
-
-                  <p className="text-center text-[8px] font-black text-white/10 uppercase tracking-[0.5em]">
-                    Se abrirá WhatsApp para confirmar
-                  </p>
+              <div className="pt-8 border-t border-white/10 space-y-6 mt-auto shrink-0">
+                <div className="flex justify-between items-center px-2">
+                  <span className="text-white/30 font-black text-[9px] uppercase tracking-[0.4em]">Inversión</span>
+                  <span className="text-5xl md:text-6xl font-header text-white tracking-tighter">
+                    <span className="text-[#fac415] text-2xl md:text-3xl mr-1">{settings.currency}</span>
+                    {total.toLocaleString()}
+                  </span>
                 </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02, backgroundColor: '#0e8f6f' }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleSendOrder}
+                  className="w-full bg-[#10a37f] text-white rounded-[2rem] py-6 md:py-8 font-black text-[10px] md:text-[11px] transition-all flex items-center justify-center gap-4 shadow-[0_20px_40px_rgba(16,163,127,0.3)] uppercase tracking-[0.4em]"
+                >
+                  <MessageCircle size={24} /> Enviar Pedido
+                </motion.button>
+
+                <p className="text-center text-[8px] font-black text-white/10 uppercase tracking-[0.5em]">
+                  Redireccionando a WhatsApp
+                </p>
               </div>
             </div>
           </div>

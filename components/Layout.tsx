@@ -9,9 +9,10 @@ interface LayoutProps {
   title?: string;
   showBack?: boolean;
   onBack?: () => void;
+  hideFooter?: boolean;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children, title, showBack, onBack }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, title, showBack, onBack, hideFooter }) => {
   const { cart, settings, isAdmin, logout } = useStore();
   const [isScrolled, setIsScrolled] = useState(false);
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -119,70 +120,72 @@ export const Layout: React.FC<LayoutProps> = ({ children, title, showBack, onBac
       </main>
 
       {/* Footer Cinematográfico */}
-      <footer className="bg-[#080808] border-t border-white/5 pt-24 pb-48 md:py-32 px-6 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-[#e31c1c] to-transparent opacity-30"></div>
+      {!hideFooter && (
+        <footer className="bg-[#080808] border-t border-white/5 pt-24 pb-48 md:py-32 px-6 relative overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-[#e31c1c] to-transparent opacity-30"></div>
 
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-20 items-start">
-            <div className="space-y-8">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-[#e31c1c] rounded-xl flex items-center justify-center">
-                  <Pizza size={20} fill="currentColor" />
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-20 items-start">
+              <div className="space-y-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-[#e31c1c] rounded-xl flex items-center justify-center">
+                    <Pizza size={20} fill="currentColor" />
+                  </div>
+                  <h2 className="font-header text-3xl uppercase tracking-tighter">{settings.restaurantName}</h2>
                 </div>
-                <h2 className="font-header text-3xl uppercase tracking-tighter">{settings.restaurantName}</h2>
+                <p className="text-white/40 leading-relaxed text-sm italic">
+                  "Nuestra esencia reside en el respeto por los tiempos de leudado y la calidad insuperable de nuestra materia prima. Una tradición que se saborea en cada bocado."
+                </p>
+                <div className="flex gap-4">
+                  {[Instagram, Phone, MapPin].map((Icon, i) => (
+                    <motion.div
+                      key={i}
+                      whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
+                      className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 cursor-pointer"
+                    >
+                      <Icon size={18} />
+                    </motion.div>
+                  ))}
+                </div>
               </div>
-              <p className="text-white/40 leading-relaxed text-sm italic">
-                "Nuestra esencia reside en el respeto por los tiempos de leudado y la calidad insuperable de nuestra materia prima. Una tradición que se saborea en cada bocado."
-              </p>
-              <div className="flex gap-4">
-                {[Instagram, Phone, MapPin].map((Icon, i) => (
-                  <motion.div
-                    key={i}
-                    whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
-                    className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 cursor-pointer"
-                  >
-                    <Icon size={18} />
-                  </motion.div>
-                ))}
-              </div>
-            </div>
 
-            <div className="flex flex-col items-center justify-center gap-6">
-              <motion.div
-                whileHover={{ rotateY: 180 }}
-                transition={{ duration: 0.8 }}
-                className="bg-white/5 p-6 rounded-[2.5rem] border border-white/10 shadow-2xl flex flex-col items-center gap-4"
-              >
-                <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&color=ffffff&bgcolor=00000000&data=${encodeURIComponent(window.location.href)}`}
-                  alt="Menu QR"
-                  className="w-24 h-24"
-                />
-                <span className="text-[8px] font-black uppercase tracking-[0.4em] text-white/30">Compartir Carta</span>
-              </motion.div>
-            </div>
-
-            <div className="space-y-8 text-right md:text-right">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#e31c1c]">Dónde Encontrarnos</h3>
-              <div className="space-y-4">
-                <p className="text-white font-bold text-lg">{settings.address}</p>
-                <p className="text-white/40 text-sm">{settings.openingHours}</p>
-              </div>
-              <div className="h-[1px] w-full bg-white/5 ml-auto"></div>
-              <div className="flex flex-col items-center md:items-end gap-2">
-                <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.5em]">PIZZERIA ITALIA © 2024</p>
-                <motion.a
-                  whileHover={{ color: '#e31c1c', x: -5 }}
-                  href="#admin"
-                  className="text-[8px] font-black uppercase tracking-[0.4em] text-white/20 hover:text-[#e31c1c] transition-all flex items-center gap-2"
+              <div className="flex flex-col items-center justify-center gap-6">
+                <motion.div
+                  whileHover={{ rotateY: 180 }}
+                  transition={{ duration: 0.8 }}
+                  className="bg-white/5 p-6 rounded-[2.5rem] border border-white/10 shadow-2xl flex flex-col items-center gap-4"
                 >
-                  <ShieldCheck size={10} /> Panel Administrativo
-                </motion.a>
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&color=ffffff&bgcolor=00000000&data=${encodeURIComponent(window.location.href)}`}
+                    alt="Menu QR"
+                    className="w-24 h-24"
+                  />
+                  <span className="text-[8px] font-black uppercase tracking-[0.4em] text-white/30">Compartir Carta</span>
+                </motion.div>
+              </div>
+
+              <div className="space-y-8 text-right md:text-right">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#e31c1c]">Dónde Encontrarnos</h3>
+                <div className="space-y-4">
+                  <p className="text-white font-bold text-lg">{settings.address}</p>
+                  <p className="text-white/40 text-sm">{settings.openingHours}</p>
+                </div>
+                <div className="h-[1px] w-full bg-white/5 ml-auto"></div>
+                <div className="flex flex-col items-center md:items-end gap-2">
+                  <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.5em]">PIZZERIA ITALIA © 2024</p>
+                  <motion.a
+                    whileHover={{ color: '#e31c1c', x: -5 }}
+                    href="#admin"
+                    className="text-[8px] font-black uppercase tracking-[0.4em] text-white/20 hover:text-[#e31c1c] transition-all flex items-center gap-2"
+                  >
+                    <ShieldCheck size={10} /> Panel Administrativo
+                  </motion.a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      )}
 
       {!isAdmin && <FloatingBar />}
     </div>
