@@ -28,6 +28,8 @@ export const FloatingBar: React.FC = () => {
         'entregado': <PackageCheck size={14} />
     };
 
+    if (cart.length === 0 && !activeOrder) return null;
+
     return (
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[150] w-[90%] max-w-lg">
             <motion.div

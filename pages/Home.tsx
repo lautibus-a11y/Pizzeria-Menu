@@ -149,7 +149,7 @@ export const Home: React.FC = () => {
 
       {/* Menú Section - Tighter Gap */}
       <section id="menu-section" className="bg-[#050505] min-h-screen pt-12 pb-40 relative">
-        <div className="sticky top-[80px] z-[90] py-8 px-4 mb-20">
+        <div className="sticky top-0 z-[90] py-8 px-4 mb-20">
           <div className="max-w-4xl mx-auto tab-nav-container">
             <div className="flex justify-between gap-1 overflow-x-auto no-scrollbar scroll-smooth">
               {categories.map(cat => (
