@@ -6,6 +6,13 @@ import { ShoppingCart, PackageCheck, Zap } from 'lucide-react';
 
 export const FloatingBar: React.FC = () => {
     const { cart, orders, activeOrderId, settings } = useStore();
+    const [currentHash, setCurrentHash] = React.useState(window.location.hash);
+
+    React.useEffect(() => {
+        const handleHash = () => setCurrentHash(window.location.hash);
+        window.addEventListener('hashchange', handleHash);
+        return () => window.removeEventListener('hashchange', handleHash);
+    }, []);
 
     const cartTotal = cart.reduce((acc, item) => {
         const extrasTotal = item.selectedExtras.reduce((sum, e) => sum + e.price, 0);
@@ -28,7 +35,7 @@ export const FloatingBar: React.FC = () => {
         'entregado': <PackageCheck size={14} />
     };
 
-    if (cart.length === 0 && !activeOrder) return null;
+    if ((cart.length === 0 && !activeOrder) || currentHash === '#cart' || currentHash === '#/cart') return null;
 
     return (
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[150] w-[90%] max-w-lg">
