@@ -1,0 +1,7 @@
+{
+  "name": "Pizzeria Pro - Menú Digital",
+  "description": "Menú digital profesional para pizzerías con pedidos directos a WhatsApp, panel de administración y diseño mobile-first.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
