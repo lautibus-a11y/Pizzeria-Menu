@@ -193,20 +193,16 @@ export const Home: React.FC = () => {
             </p>
           </div>
 
-          <motion.div
-            layout
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-14"
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-14">
             <AnimatePresence mode="popLayout">
               {filteredProducts.map((product, index) => (
                 <motion.div
                   layout
                   key={product.id}
-                  initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                  viewport={{ once: true, margin: "100px" }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.6, delay: (index % 3) * 0.1 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4, delay: (index % 3) * 0.05 }}
                   onClick={() => setSelectedProduct(product)}
                   className="group relative h-[36rem] rounded-[3.5rem] overflow-hidden cursor-pointer premium-card hover:border-[#e31c1c]/50 transition-all duration-500 shadow-2xl"
                 >
@@ -254,7 +250,7 @@ export const Home: React.FC = () => {
                 </motion.div>
               ))}
             </AnimatePresence>
-          </motion.div>
+          </div>
         </div>
       </section>
 
