@@ -9,18 +9,18 @@ import confetti from 'canvas-confetti';
 
 export const Home: React.FC = () => {
   const { categories, products, settings, addToCart } = useStore();
-  const [activeCategory, setActiveCategory] = useState<string | undefined>(categories[0]?.id);
+  const [activeCategory, setActiveCategory] = useState<string | undefined>(categories[0]?.id ? String(categories[0].id) : undefined);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     if (categories.length > 0 && !activeCategory) {
-      setActiveCategory(categories[0].id);
+      setActiveCategory(String(categories[0].id));
     }
   }, [categories, activeCategory]);
 
   const filteredProducts = products.filter(p =>
     p.isActive &&
-    p.categoryId === activeCategory
+    String(p.categoryId) === String(activeCategory)
   );
 
   const handleAddToCart = () => {
@@ -119,7 +119,7 @@ export const Home: React.FC = () => {
             transition={{ duration: 1, delay: 0.8 }}
             className="flex flex-col items-center gap-10 will-animate"
           >
-            <p className="text-white/50 max-w-md text-xs md:text-sm uppercase tracking-[0.6em] font-black leading-relaxed">
+            <p className="text-white/50 max-w-md text-[10px] md:text-sm uppercase tracking-[0.3em] md:tracking-[0.6em] font-black leading-relaxed px-4">
               Pasión por la tradición <br /> <span className="text-[#e31c1c]">Sabor por la innovación</span>
             </p>
 
@@ -150,14 +150,14 @@ export const Home: React.FC = () => {
       {/* Menú Section - Tighter Gap */}
       <section id="menu-section" className="bg-[#050505] min-h-screen pt-12 pb-40 relative">
         <div className="sticky top-0 z-[90] py-8 px-4 mb-20">
-          <div className="max-w-4xl mx-auto tab-nav-container">
-            <div className="flex justify-between gap-1 overflow-x-auto no-scrollbar scroll-smooth">
+          <div className="max-w-4xl mx-auto tab-nav-container relative z-[95]">
+            <div className="flex justify-start md:justify-center items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth px-4">
               {categories.map(cat => (
                 <motion.button
                   key={cat.id}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={`flex items-center gap-3 px-8 py-4 rounded-2xl transition-all shrink-0 font-black text-[10px] uppercase tracking-[0.2em] relative overflow-hidden ${activeCategory === cat.id
+                  onClick={() => setActiveCategory(String(cat.id))}
+                  className={`flex items-center gap-3 px-6 py-4 rounded-2xl transition-all shrink-0 font-black text-[10px] uppercase tracking-[0.2em] relative overflow-hidden ${String(activeCategory) === String(cat.id)
                     ? 'text-white'
                     : 'text-white/30 hover:text-white hover:bg-white/5'
                     }`}
@@ -165,7 +165,7 @@ export const Home: React.FC = () => {
                   <span className="relative z-10">{cat.icon}</span>
                   <span className="relative z-10">{cat.name}</span>
 
-                  {activeCategory === cat.id && (
+                  {String(activeCategory) === String(cat.id) && (
                     <motion.div
                       layoutId="activeCategory"
                       className="absolute inset-0 bg-[#e31c1c] active-tab-indicator"
@@ -204,7 +204,7 @@ export const Home: React.FC = () => {
                   key={product.id}
                   initial={{ opacity: 0, scale: 0.9, y: 30 }}
                   whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, margin: "100px" }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.6, delay: (index % 3) * 0.1 }}
                   onClick={() => setSelectedProduct(product)}

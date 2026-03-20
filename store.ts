@@ -67,7 +67,7 @@ export const useStore = create<AppState>()(
       orders: [],
       isAdmin: false,
       activeOrderId: null,
-      isLoading: false,
+      isLoading: true,
 
       fetchInitialData: async () => {
         set({ isLoading: true });
