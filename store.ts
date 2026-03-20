@@ -25,6 +25,7 @@ interface AppState {
   isAdmin: boolean;
   activeOrderId: string | null;
   isLoading: boolean;
+  error: string | null;
 
   fetchInitialData: () => Promise<void>;
 
@@ -68,9 +69,10 @@ export const useStore = create<AppState>()(
       isAdmin: false,
       activeOrderId: null,
       isLoading: true,
+      error: null,
 
       fetchInitialData: async () => {
-        set({ isLoading: true });
+        set({ isLoading: true, error: null });
         try {
           const [catRes, prodRes, setRes, ordRes] = await Promise.all([
             supabase.from('categories').select('*').order('id'),
@@ -78,6 +80,9 @@ export const useStore = create<AppState>()(
             supabase.from('settings').select('*').single(),
             supabase.from('orders').select('*').order('created_at', { ascending: false })
           ]);
+
+          if (catRes.error) throw new Error(`Error en categorías: ${catRes.error.message}`);
+          if (prodRes.error) throw new Error(`Error en productos: ${prodRes.error.message}`);
 
           if (catRes.data) set({ categories: catRes.data });
           if (prodRes.data) {
@@ -118,8 +123,9 @@ export const useStore = create<AppState>()(
             }));
             set({ orders: mappedOrders });
           }
-        } catch (error) {
+        } catch (error: any) {
           console.error('Error fetching initial data:', error);
+          set({ error: error?.message || 'Error de conexión desconocido' });
         } finally {
           set({ isLoading: false });
         }
@@ -285,7 +291,7 @@ export const useStore = create<AppState>()(
       logout: () => set({ isAdmin: false }),
     }),
     {
-      name: 'pizzeria-pro-storage-v3',
+      name: 'pizzeria-pro-storage-v5',
       partialize: (state) => ({ cart: state.cart, isAdmin: state.isAdmin, activeOrderId: state.activeOrderId }),
     }
   )

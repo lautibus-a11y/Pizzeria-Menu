@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 
 export const Home: React.FC = () => {
-  const { categories, products, settings, addToCart } = useStore();
+  const { categories, products, settings, addToCart, error, fetchInitialData } = useStore();
   const [activeCategory, setActiveCategory] = useState<string | undefined>(categories[0]?.id ? String(categories[0].id) : undefined);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
@@ -44,6 +44,28 @@ export const Home: React.FC = () => {
 
   return (
     <Layout>
+      {/* Error Banner if connection fails */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-red-950/80 backdrop-blur-3xl px-6 py-4 border-b border-red-500/20 text-center relative z-[300]"
+          >
+            <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-center gap-4">
+              <span className="text-red-400 text-xs font-black uppercase tracking-widest">{error}</span>
+              <button
+                onClick={() => fetchInitialData()}
+                className="bg-red-500 text-white px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-red-600 transition-all"
+              >
+                Reintentar
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hero Section - Elite UI/UX Experience */}
       <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-center overflow-hidden bg-[#0a0000]">
         {/* Optimized Dynamic Backgrounds */}
