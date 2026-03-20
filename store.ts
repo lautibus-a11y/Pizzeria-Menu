@@ -285,7 +285,7 @@ export const useStore = create<AppState>()(
       logout: () => set({ isAdmin: false }),
     }),
     {
-      name: 'pizzeria-pro-storage-v2',
+      name: 'pizzeria-pro-storage-v3',
       partialize: (state) => ({ cart: state.cart, isAdmin: state.isAdmin, activeOrderId: state.activeOrderId }),
     }
   )

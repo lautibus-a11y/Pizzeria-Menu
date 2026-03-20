@@ -56,7 +56,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-[#050505] min-h-screen text-white">
       {renderPage()}
     </div>
   );

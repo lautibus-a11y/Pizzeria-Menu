@@ -152,7 +152,9 @@ export const Home: React.FC = () => {
         <div className="sticky top-0 z-[90] py-8 px-4 mb-20">
           <div className="max-w-4xl mx-auto tab-nav-container relative z-[95]">
             <div className="flex justify-start md:justify-center items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth px-4">
-              {categories.map(cat => (
+              {categories.length === 0 ? (
+                <div className="text-white/40 text-[10px] uppercase tracking-widest py-2">Cargando selección...</div>
+              ) : categories.map(cat => (
                 <motion.button
                   key={cat.id}
                   whileTap={{ scale: 0.95 }}
