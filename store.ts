@@ -74,17 +74,21 @@ export const useStore = create<AppState>()(
       fetchInitialData: async () => {
         set({ isLoading: true, error: null });
         try {
-          const [catRes, prodRes, setRes, ordRes] = await Promise.all([
-            supabase.from('categories').select('*').order('id'),
-            supabase.from('products').select('*').order('name'),
-            supabase.from('settings').select('*').single(),
-            supabase.from('orders').select('*').order('created_at', { ascending: false })
-          ]);
+          // Retry logic for categories (critical)
+          let catRes = null;
+          let retries = 0;
+          while (retries < 3) {
+            catRes = await supabase.from('categories').select('*').order('id');
+            if (!catRes.error) break;
+            retries++;
+            await new Promise(r => setTimeout(r, 500 * retries)); // Exponential backoff
+          }
 
-          if (catRes.error) throw new Error(`Error en categorías: ${catRes.error.message}`);
-          if (prodRes.error) throw new Error(`Error en productos: ${prodRes.error.message}`);
+          if (catRes && catRes.error) throw new Error(`[CAT] ${catRes.error.message}`);
+          if (catRes && catRes.data) set({ categories: catRes.data });
 
-          if (catRes.data) set({ categories: catRes.data });
+          const prodRes = await supabase.from('products').select('*').order('name');
+          if (prodRes.error) throw new Error(`[PROD] ${prodRes.error.message}`);
           if (prodRes.data) {
             const mappedProds = prodRes.data.map(p => ({
               id: p.id,
@@ -98,6 +102,9 @@ export const useStore = create<AppState>()(
             }));
             set({ products: mappedProds });
           }
+
+          const setRes = await supabase.from('settings').select('*').single();
+          if (setRes.error) throw new Error(`[SET] ${setRes.error.message}`);
           if (setRes.data) {
             const { admin_password, ...rest } = setRes.data;
             set({
@@ -111,6 +118,8 @@ export const useStore = create<AppState>()(
               }
             });
           }
+
+          const ordRes = await supabase.from('orders').select('*').order('created_at', { ascending: false });
           if (ordRes.data) {
             const mappedOrders = ordRes.data.map(o => ({
               id: o.id,
@@ -125,7 +134,9 @@ export const useStore = create<AppState>()(
           }
         } catch (error: any) {
           console.error('Error fetching initial data:', error);
-          set({ error: error?.message || 'Error de conexión desconocido' });
+          const errorMsg = error?.message || 'Error desconocido';
+          const isNetwork = errorMsg.toLowerCase().includes('load failed') || errorMsg.toLowerCase().includes('fetch');
+          set({ error: `${isNetwork ? 'Error de red (Supabase bloqueado?): ' : ''}${errorMsg}` });
         } finally {
           set({ isLoading: false });
         }
@@ -291,7 +302,7 @@ export const useStore = create<AppState>()(
       logout: () => set({ isAdmin: false }),
     }),
     {
-      name: 'pizzeria-pro-storage-v5',
+      name: 'pizzeria-pro-storage-v7',
       partialize: (state) => ({ cart: state.cart, isAdmin: state.isAdmin, activeOrderId: state.activeOrderId }),
     }
   )

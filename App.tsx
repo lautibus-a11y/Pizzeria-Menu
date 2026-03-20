@@ -12,7 +12,11 @@ const App: React.FC = () => {
   const { fetchInitialData, isLoading } = useStore();
 
   useEffect(() => {
-    fetchInitialData();
+    // Adding a small delay to prevent race conditions on mobile startup
+    const timer = setTimeout(() => {
+      fetchInitialData();
+    }, 500);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
