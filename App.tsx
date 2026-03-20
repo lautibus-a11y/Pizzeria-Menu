@@ -12,6 +12,14 @@ const App: React.FC = () => {
   const { fetchInitialData, isLoading } = useStore();
 
   useEffect(() => {
+    // Debug helper for mobile
+    const handleError = (e: any) => alert('JS Error: ' + (e.reason || e.message || 'Unknown'));
+    window.addEventListener('unhandledrejection', handleError);
+    window.onerror = (msg, url, line) => {
+      alert(`Runtime: ${msg} at ${line}`);
+      return false;
+    };
+
     // Adding a small delay to prevent race conditions on mobile startup
     const timer = setTimeout(() => {
       fetchInitialData();

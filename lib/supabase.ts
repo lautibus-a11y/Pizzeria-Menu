@@ -9,4 +9,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('Supabase URL or Anon Key is missing in environment variables');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
+    }
+});
