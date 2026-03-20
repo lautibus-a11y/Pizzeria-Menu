@@ -51,16 +51,33 @@ export const Home: React.FC = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-red-950/80 backdrop-blur-3xl px-6 py-4 border-b border-red-500/20 text-center relative z-[300]"
+            className="bg-red-950/90 backdrop-blur-3xl px-6 py-6 border-b border-white/5 text-center relative z-[300]"
           >
-            <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-center gap-4">
-              <span className="text-red-400 text-xs font-black uppercase tracking-widest">{error}</span>
-              <button
-                onClick={() => fetchInitialData()}
-                className="bg-red-500 text-white px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-red-600 transition-all"
-              >
-                Reintentar
-              </button>
+            <div className="max-w-4xl mx-auto space-y-4">
+              <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+                <span className="text-red-400 text-[10px] font-black uppercase tracking-widest">{error}</span>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => fetchInitialData()}
+                    className="bg-white text-black px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-[#e31c1c] hover:text-white transition-all shadow-xl"
+                  >
+                    Reintentar
+                  </button>
+                  <button
+                    onClick={() => {
+                      localStorage.clear();
+                      sessionStorage.clear();
+                      window.location.reload();
+                    }}
+                    className="bg-white/5 text-white/40 border border-white/10 px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-white/10 transition-all"
+                  >
+                    Borrar Caché y Datos
+                  </button>
+                </div>
+              </div>
+              <p className="text-white/20 text-[8px] font-black uppercase tracking-[0.2em]">
+                Si el problema persiste, intenta cambiar de Wi-Fi a Datos Móviles o viceversa.
+              </p>
             </div>
           </motion.div>
         )}
