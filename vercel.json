@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+        {
+            "source": "/_database/:path*",
+            "destination": "https://vdbhycusketolqelbflu.supabase.co/:path*"
+        }
+    ]
+}

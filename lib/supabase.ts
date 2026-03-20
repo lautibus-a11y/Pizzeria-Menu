@@ -2,10 +2,13 @@
 /// <reference types="vite/client" />
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const isProd = import.meta.env.PROD;
+const supabaseUrl = isProd
+    ? window.location.origin + '/_database'
+    : (import.meta.env.VITE_SUPABASE_URL || '');
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!isProd && (!supabaseUrl || !supabaseAnonKey)) {
     throw new Error('Supabase URL or Anon Key is missing in environment variables');
 }
 
